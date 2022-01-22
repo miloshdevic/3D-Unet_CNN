@@ -1,2 +1,0 @@
-model_checkpoint_path: "model_for_breast_cancer"
-all_model_checkpoint_paths: "model_for_breast_cancer"
