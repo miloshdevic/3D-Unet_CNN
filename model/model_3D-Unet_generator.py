@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
-# import matplotlib.pyplot as plt
-# import os
+import matplotlib.pyplot as plt
+import os
 import random
 from volumentations import *
 import tensorflow.keras.backend as K
@@ -9,6 +9,7 @@ import tensorflow.keras.backend as K
 physical_devices = tf.config.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
+# Hyperparameters
 slice_num = 128
 img_row = 128
 img_col = 128
@@ -16,9 +17,9 @@ channels = 1
 batch_size = 8
 
 mask_shape = (slice_num, img_row, img_col, channels)
-
 img_shape = (slice_num, img_row, img_col, 1)
 
+# Compute Canada root
 root = '/home/mdevic31/scratch/data/'
 
 def weighted_bce(y_true, y_pred):
@@ -37,9 +38,9 @@ def get_3D_UNet_generator():
     norm0 = tf.keras.layers.BatchNormalization()(conv0)
     leaky0 = tf.keras.layers.LeakyReLU()(norm0)  # (128, 128, 128, 16)
     conv05 = tf.keras.layers.Conv3D(32, (3, 3, 3), padding='same')(leaky0)
-    norm05 = tf.keras.layers.BatchNormalization()(conv05) # si b=2, instance normalization ai lieu de batch normalization
+    norm05 = tf.keras.layers.BatchNormalization()(conv05) # si b=2, instance normalization au lieu de batch normalization
     leaky05 = tf.keras.layers.LeakyReLU()(norm05)  # (128, 128, 128, 32) --> stays 128 bc of padding
-    max0 = tf.keras.layers.Conv3D(32, (3, 3, 3), strides=(2, 2, 2))(leaky05) # TODO: filtre (3,3,3)
+    max0 = tf.keras.layers.Conv3D(32, (3, 3, 3), strides=(2, 2, 2))(leaky05)  # TODO: filtre (3,3,3)
 
     # from 64x64x64 to 32x32x32
     conv1 = tf.keras.layers.Conv3D(32, (3, 3, 3), padding='same')(max0)
@@ -88,6 +89,8 @@ def get_3D_UNet_generator():
 # def get_augmentations():
 #     return v.Compose([v.Rotate(x_limit=(-2, 2), y_limit=(0, 0), z_limit=(0, 0), p=0.25, border_mode="nearest"),
 #                       v.RandomGamma(gamma_limit=(0.9, 1.1), p=0.25)])
+
+
 def augmentor(img, mask):
     aug = get_augmentation()
     data = {'image': img, 'mask': mask}
@@ -99,7 +102,8 @@ def augmentor(img, mask):
     # plt.show()
     return img, mask
 
-    # random data augmentation
+
+# random data augmentation
 def get_augmentation():
     return Compose([  # Rotate((-15, 15), (0, 0), (0, 0), p=0.5),
         # Flip(0, p=0.5),
@@ -110,11 +114,11 @@ def get_augmentation():
         GaussianNoise(var_limit=(0, 5), p=0.4),
         RandomGamma(gamma_limit=(0.5, 3), p=0.4)], p=1.0)
 
+
 optimizer = tf.keras.optimizers.Adam(0.001, 0.9)  # 0.001 is the learning rate
 
 generator = get_3D_UNet_generator()
 generator.compile(loss=weighted_bce, optimizer=optimizer)
-# patient_numbers = []
 
 
 def workout(epochs, batch_size_workout):
@@ -123,23 +127,24 @@ def workout(epochs, batch_size_workout):
         image_batch = np.zeros(shape=(batch_size_workout, slice_num, img_row, img_col, 1))
         # fill the array with the bath for training during epoch
         past_ids = []
+
         for i in range(batch_size_workout):
             idx = random.randint(0, 80)
+
             if len(past_ids) == 0:
                 pass
             else:
                 while idx in past_ids:
-                    print("while")
                     idx = random.randint(0, 80)
+
             past_ids.append(idx)
             image = np.load(root + "images/" + str(idx) + ".npy")
+
             # normalize
             image = (image - np.min(image)) / (np.max(image) - np.min(image))
             image = np.expand_dims(np.expand_dims(image, axis=-1), axis=0)
             mask = np.load(root + "masks/" + str(idx) + ".npy")
             mask = np.expand_dims(np.expand_dims(mask, axis=-1), axis=0)
-            print("image:", image.shape)
-            print("mask:", mask.shape)
             # aug = get_augmentations()
             # data = {'image': image, 'mask': mask}
             # aug_data = aug(**data)
@@ -148,7 +153,7 @@ def workout(epochs, batch_size_workout):
             # image, mask = augmentor(image, mask)
             image_batch[i], mask_batch[i] = image, np.reshape(mask, newshape=(1, img_col, img_row, slice_num, 1))
             # patient_numbers.append(idx)
-        print("before train on batch")
+
         g_loss = generator.train_on_batch(image_batch, mask_batch)
 
         # print statement to keep track of what is going on during training
