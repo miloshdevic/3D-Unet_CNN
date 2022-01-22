@@ -4,12 +4,15 @@ import tensorflow.keras.backend as K
 from tensorflow.keras.models import Sequential
 from Data_generator import DataGenerator
 
-
+# Hyperparameters
 HEIGHT = 128
 WEIGHT = 128
 DEPTH = 128
 BATCH_SIZE = 8
 
+
+###################################################################################################################
+# Different loss functions/methods that have been used
 
 def dice_coef(y_true, y_pred, smooth=1e-8):
     """
@@ -32,11 +35,13 @@ def recall_m(y_true, y_pred):
     recall = true_positives / (possible_positives + K.epsilon())
     return recall
 
+
 def precision_m(y_true, y_pred):
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
     predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
     precision = true_positives / (predicted_positives + K.epsilon())
     return precision
+
 
 def f1_m(y_true, y_pred):
     precision = precision_m(y_true, y_pred)
@@ -44,64 +49,26 @@ def f1_m(y_true, y_pred):
     return 2*((precision*recall)/(precision+recall+K.epsilon()))
 
 
+# def weighted_bce(y_true, y_pred):
+#   weights = y_true * class_weight[1] + (1-y_true)*class_weight[0]
+#   bce = K.binary_crossentropy(y_true, y_pred)
+#   weighted_bce = K.mean(bce * weights)
+#   return weighted_bce
+# 
+# 
+# weight_mangrove = np.sum(Y_train==0)/np.sum(Y_train==1)
+# 
+# class_weight = {0: 1.0,
+#                 1: weight_mangrove}
+
+###################################################################################################################
+
 # Design model
 model = Sequential()
 
 # Architecture
 inputs = tf.keras.layers.Input((HEIGHT, WEIGHT, DEPTH, 1), batch_size=BATCH_SIZE)
-# s = tf.keras.layers.Lambda(lambda x: x / 255)(inputs)
 
-# Contraction path
-# c1 = tf.keras.layers.Conv3D(16, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(inputs)
-# c1 = tf.keras.layers.Dropout(0.1)(c1)
-# c1 = tf.keras.layers.Conv3D(16, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c1)
-# p1 = tf.keras.layers.MaxPooling3D((2, 2, 2))(c1)
-#
-# c2 = tf.keras.layers.Conv3D(32, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(p1)
-# c2 = tf.keras.layers.Dropout(0.1)(c2)
-# c2 = tf.keras.layers.Conv3D(32, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c2)
-# p2 = tf.keras.layers.MaxPooling3D((2, 2, 2))(c2)
-#
-# c3 = tf.keras.layers.Conv3D(64, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(p2)
-# c3 = tf.keras.layers.Dropout(0.2)(c3)
-# c3 = tf.keras.layers.Conv3D(64, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c3)
-# p3 = tf.keras.layers.MaxPooling3D((2, 2, 2))(c3)
-#
-# c4 = tf.keras.layers.Conv3D(128, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(p3)
-# c4 = tf.keras.layers.Dropout(0.2)(c4)
-# c4 = tf.keras.layers.Conv3D(128, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c4)
-# p4 = tf.keras.layers.MaxPooling3D(pool_size=(2, 2, 2))(c4)
-#
-# c5 = tf.keras.layers.Conv3D(256, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(p4)
-# c5 = tf.keras.layers.Dropout(0.3)(c5)
-# c5 = tf.keras.layers.Conv3D(256, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c5)
-#
-# # Expansive path
-# u6 = tf.keras.layers.Conv3DTranspose(128, (2, 2, 2), strides=(2, 2, 2), padding='same')(c5)
-# u6 = tf.keras.layers.concatenate([u6, c4], axis=-1)
-# c6 = tf.keras.layers.Conv3D(128, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(u6)
-# c6 = tf.keras.layers.Dropout(0.2)(c6)
-# c6 = tf.keras.layers.Conv3D(128, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c6)
-#
-# u7 = tf.keras.layers.Conv3DTranspose(64, (2, 2, 2), strides=(2, 2, 2), padding='same')(c6)
-# u7 = tf.keras.layers.concatenate([u7, c3], axis=-1)
-# c7 = tf.keras.layers.Conv3D(64, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(u7)
-# c7 = tf.keras.layers.Dropout(0.2)(c7)
-# c7 = tf.keras.layers.Conv3D(64, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c7)
-#
-# u8 = tf.keras.layers.Conv3DTranspose(32, (2, 2, 2), strides=(2, 2, 2), padding='same')(c7)
-# u8 = tf.keras.layers.concatenate([u8, c2], axis=-1)
-# c8 = tf.keras.layers.Conv3D(32, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(u8)
-# c8 = tf.keras.layers.Dropout(0.1)(c8)
-# c8 = tf.keras.layers.Conv3D(32, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c8)
-#
-# u9 = tf.keras.layers.Conv3DTranspose(16, (2, 2, 2), strides=(2, 2, 2), padding='same')(c8)
-# u9 = tf.keras.layers.concatenate([u9, c1], axis=-1)
-# c9 = tf.keras.layers.Conv3D(16, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(u9)
-# c9 = tf.keras.layers.Dropout(0.1)(c9)
-# c9 = tf.keras.layers.Conv3D(16, (3, 3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c9)
-#
-# outputs = tf.keras.layers.Conv3D(1, (1, 1, 1), activation='sigmoid')(c9)
 # go from 128x128x128 to 64x64x64
 # filters go from 1 to 32
 conv0 = tf.keras.layers.Conv3D(16, (2, 2, 2), padding='same')(inputs)
@@ -158,7 +125,7 @@ callbacks = [
     checkpointer
 ]
 
-# optimizer = tf.keras.optimizers.Adam(0.001, 0.9)  # 0.001 is the learning rate
+optimizer = tf.keras.optimizers.Adam(0.001, 0.9)  # 0.001 is the learning rate
 
 model = tf.keras.Model(inputs=[inputs], outputs=[output])
 model.compile(optimizer='adam', loss='binary_crossentropy')  # , metrics=['accuracy', dice_coef])
@@ -185,14 +152,3 @@ validation_generator = DataGenerator(partition['validation'], labels['validation
 # Train model on dataset
 model.fit(training_generator, epochs=1000, batch_size=BATCH_SIZE,  validation_data=validation_generator,
           callbacks=callbacks, verbose=1)
-
-# def weighted_bce(y_true, y_pred):
-#   weights = y_true * class_weight[1] + (1-y_true)*class_weight[0]
-#   bce = K.binary_crossentropy(y_true, y_pred)
-#   weighted_bce = K.mean(bce * weights)
-#   return weighted_bce
-
-# weight_mangrove = np.sum(Y_train==0)/np.sum(Y_train==1)
-#
-# class_weight = {0: 1.0,
-#                 1: weight_mangrove}
