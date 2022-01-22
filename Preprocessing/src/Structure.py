@@ -536,6 +536,7 @@ class Structure(object):
 
         return new_contours
 
+# customized version of 'get_mask_slices' to exctract properly what I needed
 def my_get_mask_slices(roi , coordinates, zoom=(1.0,1.0,1.0)):
 
     """
@@ -556,6 +557,7 @@ def my_get_mask_slices(roi , coordinates, zoom=(1.0,1.0,1.0)):
             if "ContourData" in contour:
                 i = 0
                 points_start_end = []
+                
                 for z_value in [pos[2] for pos in zip(*([iter(contour.ContourData)] * 3))]:
                     start_point = [contour.ContourData[i], contour.ContourData[i + 1], z_value]
                     i += 3
@@ -565,12 +567,13 @@ def my_get_mask_slices(roi , coordinates, zoom=(1.0,1.0,1.0)):
                         points_start_end.append([start_point, end_point])
                     except:
                         continue
+                        
                 slc_thickness = coordinates.slice_coordinates[1]-coordinates.slice_coordinates[0]
                 roi_dict = get_ellipse_paths(points_start_end, slc_thickness)
                 slice_dict = {}
                 z_positions = sorted(roi_dict.keys())
                 ar_z_positions = numpy.array(z_positions)
-                # TODO: check if 'structure_spacing' can be 0
+                
                 if len(ar_z_positions) > 1:
                     structure_spacing = ar_z_positions[1] - ar_z_positions[0]
                 else:
@@ -580,10 +583,12 @@ def my_get_mask_slices(roi , coordinates, zoom=(1.0,1.0,1.0)):
                 for vox in range(coordinates.num_voxels[2]):
                     slice_dict[vox] = []
                     z_pos = coordinates.slice_coordinates[vox]
+                    
                     if len(ar_z_positions) == 0:
                         idx = None
                     else:
                         idx = find_nearest(ar_z_positions, z_pos)
+                        
                     if idx is not None:
                         ar_z_pos = ar_z_positions[idx]
                         if (coordinates.spacing[2] >= structure_spacing) and \
