@@ -1,7 +1,6 @@
 import tensorflow as tf
 import tensorflow.keras
 from scipy.ndimage import interpolation
-
 from volumentations import *
 
 
@@ -40,10 +39,6 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
         data = {'image': img, 'mask': mask}
         aug_data = aug(**data)
         img, mask = aug_data['image'], aug_data['mask']
-        # plt.imshow(img[60])
-        # plt.show()
-        # plt.imshow(mask[60])
-        # plt.show()
         return img, mask
 
     # random data augmentation
@@ -69,53 +64,18 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
         x = np.empty((self.batch_size, *self.dim))  # , self.n_channels
         y = np.empty((self.batch_size, *self.dim))
         print("\nIN THE DATA GENERATION\n")
-        # Generate data
-        # for i, ID in enumerate(list_IDs_temp):
-        #     # Store sample
-        #     x[i, ] = np.load('train_data/1013990/images/' + ID + '.npy')
-        #     # resize(x[i], (128, 128, 128), anti_aliasing=True)
-        #     x[i] = zoom(x[i], np.array((128, 128, 128)) / x[i].shape, order=0)
-        #     x[i] = to_categorical(x[i], 2)
-        #
-        #     # Store class
-        #     y[i] = np.load('train_data/1013990/masks/' + ID + '.npy')  # self.labels[ID]
-        #     # resize(y[i], (128, 128, 128), anti_aliasing=True)
-        #     y[i] = zoom(y[i], np.array((1, 128, 128, 128)) / y[i].shape, order=0)
 
         for i, ID in enumerate(list_IDs_temp):
-            # Store sample
-            # pre_resize_x = np.load('/home/mdevic31/scratch/data/images/' + ID)
-            # pre_resize_x = interpolation.zoom(pre_resize_x, [64 / pre_resize_x.shape[0], 0.5, 0.5], order=5)
-            # x[i] = pre_resize_x
-
-            # Store class
-            # pre_resize_y = np.load('/home/mdevic31/scratch/data/masks/' + ID)
-            # plt.imshow(pre_resize_y[250])
-            # plt.show()
-            # pre_resize_y = interpolation.zoom(pre_resize_y, [64 / pre_resize_y.shape[0], 0.5, 0.5], order=0)
-            # y[i] = pre_resize_y
-            # plt.imshow(pre_resize_y[31])
-            # plt.show()
-            # img_augmented_np, mask_augmented_np = self.augmentor(pre_resize_x, pre_resize_y)
 
             print('patient file:', ID)
 
             # augment the images
             img_np = np.load('/home/mdevic31/scratch/data/images/' + ID)
             msk_np = np.load('/home/mdevic31/scratch/data/masks/' + ID)
-            # plt.imshow(img_np[60])
-            # plt.show()
-            # plt.imshow(msk_np[60])
-            # plt.show()
-            # img_augmented_np, mask_augmented_np = self.augmentor(img_np, msk_np)
-
-            # convert numpy arrays to tensors
-            # img_tf = tf.convert_to_tensor(img_augmented_np)
-            # msk_tf = tf.convert_to_tensor(mask_augmented_np)
 
             # normalization
             img_np = (img_np - np.min(img_np)) / (np.max(img_np) - np.min(img_np))
             x[i] = img_np
             y[i] = msk_np
 
-        return x, y  # tensorflow.keras.utils.to_categorical(y, num_classes=self.n_classes)
+        return x, y
