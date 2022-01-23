@@ -40,10 +40,13 @@ The "window_in_mm" is the height and width of the field that will be cropped fro
 
 Often times, the masks created for one patient can be well placed on several slides in a row, then shifted for several slides, then again well placed, etc. 
 
-![points_to_contours](well_placed_mask.png)
-![points_to_contours](shifted_mask.png)
+![well_placed_mask](well_placed_mask.png)
+![shifted_mask](shifted_mask.png)
 
 
-This is normal because while the patient is being scanned, he breathes so it creates an image of quivering catheters.
+This is normal because while the patient's torso is being scanned, he breathes so it creates an image of quivering catheters. The phycisist purposely reconstructs it by assuming the most probable shape of the catheter to make it more accurate.
+
+![breast_motion_1](breast_motion_1.png)
+![breast_motion_2](breast_motion_2.png)
 
 
