@@ -36,3 +36,14 @@ The "window_in_mm" is the height and width of the field that will be cropped fro
 "num_to_plot" is the number of images you want to visualize as you save them. This is a sanity check method to make sure that the labels match the images. It will show you "num_to_plot" many images before saving the rest without sanity checks. You probably won't need this once you change the code, but I would highly recommend implementing something similar. Sanity checks are super important! 
 
 "make_folders" will make folders for every patient in the image and mask folders. This was useful for me because every patient had multiple images and mask images (since I did 2D), but you probably won't need this. 
+
+
+Often times, the masks created for one patient can be well placed on several slides in a row, then shifted for several slides, then again well placed, etc. 
+
+![points_to_contours](well_placed_mask.pdf)
+![points_to_contours](shifted_mask.pdf)
+
+
+This is normal because while the patient is being scanned, he breathes so it creates an image of quivering catheters.
+
+
