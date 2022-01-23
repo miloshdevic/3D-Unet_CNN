@@ -28,13 +28,13 @@ Brachytherapy (or Curietherapy) is a form of radiotherapy where a sealed radiati
 
 Fig. 2 illustrates the workflow of brachytherapy, on which you can see different steps of the treatment. Catheter reconstruction is the step that concerns this project. 
 
-![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.002.png)![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.003.png)
+![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.002.png)![]
 
 [Fig. 2: Brachytherapy workflow] 
 
 (RO: Radio Oncologist, RTT: Radiotherapy Therapist, Phys: Medical Physicist) The plastic catheters, which have the shape of needles (Fig. 3), are inserted into the patient’s breast inside and around the treatment site (tumour bed after surgery) using an assembled comfort catheters system. The “6F” flexi-catheter (has a larger diameter) passes through the breast and is clipped with two buttons on each side to hold it in place. Then, a smaller diameter (4F) catheter is inserted into the flexi-catheter and a CT marker is inserted inside each “4F” catheter before scanning the area. The CT marker is made of Fluor, so it appears as white on the CT images. This enables the medical physicist to recognize the catheters and reconstruct them. 
 
-CT marker  4F catheter  6F catheter ![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.004.png)![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.005.png)![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.006.png)
+CT marker  4F catheter  6F catheter ![]
 
 ![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.007.jpeg) buttons 
 
@@ -75,7 +75,7 @@ To preprocess the data, I coded a script based of Luca Weishaupt’s code which 
 
 [Fig. 5: Examples of masks traced by the preprocessing code] 
 
-![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.012.png)![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.013.png)![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.014.png)
+![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.012.png)![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.013.png)![]
 
 [Fig. 6: Figure from *“Approaching automated applicator digitization from a new angle, Luca Weishaupt, Hisham Kamal Sayed, Ximeng Mao, C. Rochard Choo, Bradly J. Stish, Shirin A. Enger, Christopher L. Deufel – Estro 2021”*] 
 
@@ -176,7 +176,7 @@ Slice 50
 
 Error message:
 
-![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.036.jpeg)![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.037.png)![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.038.png)![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.039.png)![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.040.png)
+![](Aspose.Words.6061bcb9-b54b-44ad-9b71-99f16ef3c3c5.036.jpeg)![]
 
 Compute C anada suggestion:
 
