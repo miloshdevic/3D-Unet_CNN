@@ -44,7 +44,10 @@ Often times, the masks created for one patient can be well placed on several sli
 ![shifted_mask](shifted_mask.png)
 
 
+
+
 This is normal because while the patient's torso is being scanned, he breathes so it creates an image of quivering catheters. The phycisist purposely reconstructs it by assuming the most probable shape of the catheter to make it more accurate.
+
 
 ![breast_motion_1](breast_motion_1.png)
 ![breast_motion_2](breast_motion_2.png)
