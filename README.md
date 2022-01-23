@@ -7,15 +7,17 @@ by Milosh Dević
 **Table of content:** 
 
 1) [Introduction ](#_page1_x69.00_y72.00)
-1) [Initial researching ](#_page3_x69.00_y210.00)
-1) [DICOM files ](#_page3_x69.00_y243.00)
-1) [Related papers and articles ](#_page3_x69.00_y493.00)
+2) [Initial researching ](#_page3_x69.00_y210.00)
+2.1) [DICOM files ](#_page3_x69.00_y243.00)
+2.2) [Related papers and articles ](#_page3_x69.00_y493.00)
 3) [Preprocessing the data ](#_page4_x69.00_y211.00)
-3) [Training ](#_page5_x69.00_y362.00)
-   1) [Choosing the right model ](#_page5_x69.00_y399.00)
-   1) [Handling memory problems ](#_page6_x69.00_y354.00)
-3) [Results ](#_page7_x69.00_y72.00)
-3) [Conclusion ](#_page10_x69.00_y72.00)
+4) [Training ](#_page5_x69.00_y362.00)
+   4.1) [Choosing the right model ](#_page5_x69.00_y399.00)
+   4.2) [Handling memory problems ](#_page6_x69.00_y354.00)
+5) [Results ](#_page7_x69.00_y72.00)
+6) [Conclusion ](#_page10_x69.00_y72.00)
+
+
 1) **Introduction** 
 
 The project, as the name suggests, consisted of developing a deep learning algorithm in order to automatically reconstruct catheters in 3D for breast cancer patients undergoing brachytherapy treatment. Before going into the core of the project, what is brachytherapy? 
@@ -49,13 +51,13 @@ Presentation]
 The whole process usually takes several hours and reconstructing the catheters can take between 30 and 60 minutes. Reconstructing catheters is currently done  manually, which is labour intensive and prone to errors. There is the potential to reduce the time considerably and to improve the precision at the same time by automating the process which is the goal of this project. It could improve brachytherapy treatments and be beneficial for the brachytherapy team in the crucial process of reconstructing and labeling correctly the catheters. This could influence the way the dose of radiation is delivered to the patient, especially if it is near some organs at risk. 
 
 2) **Initial researching** 
-1) **DICOM files** 
+2.1) **DICOM files** 
 
 Firstly,  I  needed  to  understand  how  Digital  Imaging  and  Communication  in  Medicine (DICOM) files are structured. It is a standard, internationally accepted format to view, store, retrieve and share medical images. DICOM files contain images from a medical scan such as MRI, CT or ultrasound and they usually include a header with identification data for the patient to link the image to the specific individual.  
 
 I started by looking into the structure of the DICOM files [1][2]. These files contain tags with a specific identification number (usually in hexadecimal format). By accessing it you can obtain the information it contains. The tags of DICOM files follow a hierarchy system [3]. There is a number of tags at the top. Once accessing one of them, there is another number of tags and by entering them we can find another number of tags and so on. Therefore, one cannot directly access to a tag of the third level. There are private tags and public tags [4]. To access private tags, you need the exact hexadecimal key to access to the private tag. Accessing tags can be easily done by using Python [5]. 
 
-2) **Related papers and articles** 
+2.2) **Related papers and articles** 
 
 I spent a lot of time collecting and reading different works that have been done with deep learning in the field of brachytherapy and broader. The different literatures have helped me understand better what I had to do and get hold of the possible challenges I might face. 
 
@@ -82,7 +84,7 @@ To preprocess the data, I coded a script based of Luca Weishaupt’s code which 
 I had to rework to the code several times to change and redo the preprocessing because I was trying different models and had to change the way to do it. 
 
 4) **Training** 
-1) **Choosing the right model** 
+4.1) **Choosing the right model** 
 
 The idea of this project is to try to train a 3D U-net model. However, I have done some research about Mask RCNNs [6][7][8][9] as well as 2D U-nets (some of the articles mentioned earlier). After having consulted and discussed about it with Dr. Enger, Luca Weishaupt and Dr. Deufel, we concluded that 3D would be the best solutions but that it would be challenging in terms of memory handling. At first, I was to try to do it with semantic segmentation (loss function: binary cross-entropy) instead of instance segmentation (categorical cross-entropy). To build the model, I was using *TensorFlow* with the *Keras* library although I did take a look and considered switching to *PyTorch* [11] because it seemed to be better.  
 
@@ -94,7 +96,7 @@ Since 3D U-Nets require a lot of memory, I had to implement a data generator whi
 
 [Fig. 7: Illustration of how a 3D Unet CNN works, taken from a publication on “towardsdatascience.com”] 
 
-2) **Handling memory problems** 
+4.2) **Handling memory problems** 
 
 As I mentioned before, this specific model requires a lot of memory, so much that it cannot be trained on your own computer unless it is well equipped (with a GPU preferably) [22]. I thought that I might be able to train it on Compute Canada since they have much bigger resources that would suit for this kind of job. I spent a lot of time going through the Compute Canada documents and discussing with them and my colleagues about how best to use their resources [14][15][16][17][18][19]. When I would train it on a batch size of 2, everything would go well but it wasn’t  accurate  enough.  I  had  132  anonymized  patient  data  sets  (sampled  down  to 128x128x128px) that I could use for the training so I tried training my model with a batch size of 8 but I would get out of memory (OOM) errors. Even with a batch size of 4, the same error message would appear.  
 
