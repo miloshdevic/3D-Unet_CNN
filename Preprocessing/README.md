@@ -40,8 +40,8 @@ The "window_in_mm" is the height and width of the field that will be cropped fro
 
 Often times, the masks created for one patient can be well placed on several slides in a row, then shifted for several slides, then again well placed, etc. 
 
-![points_to_contours](well_placed_mask.pdf)
-![points_to_contours](shifted_mask.pdf)
+![points_to_contours](well_placed_mask.png)
+![points_to_contours](shifted_mask.png)
 
 
 This is normal because while the patient is being scanned, he breathes so it creates an image of quivering catheters.
